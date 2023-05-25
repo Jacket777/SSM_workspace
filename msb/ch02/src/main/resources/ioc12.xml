@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="address" class="com.msb.bean.Address">
+        <property name="province" value="江苏"/>
+        <property name="city" value="南京"/>
+        <property name="town" value="江宁"/>
+    </bean>
+    <bean id="person" class="com.msb.bean.Person">
+        <!--支持任何运算符-->
+        <property name="age" value="#{12*2}"/>
+        <!--可以引用其他bean的某个属性值-->
+        <property name="name" value="#{address.province}"/>
+        <!--引用其他bean-->
+        <property name="address" value="#{address}"/>
+        <!--调用静态方法-->
+        <property name="hobbies" value="#{T(java.util.UUID).randomUUID().toString().substring(0,4)}"/>
+        <!--调用非静态方法-->
+        <property name="gender" value="#{address.getCity()}"/>
+    </bean>
+</beans>

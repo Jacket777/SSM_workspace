@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!--
+      静态工厂的使用
+      class:指定静态工厂类
+      factory-method:指定哪个方法是工厂方法
+    -->
+    <bean id="person5" class="com.msb.factory.PersonStaticFactory" factory-method="getPerson">
+        <!--constructor-arg：可以为方法指定参数-->
+        <constructor-arg value="lisi"></constructor-arg>
+    </bean>
+
+
+    <!--实例工厂使用-->
+    <!--创建实例工厂类-->
+    <bean id="personInstanceFactory" class="com.msb.factory.PersonInstanceFactory"></bean>
+
+    <!--
+    factory-bean:指定使用哪个工厂实例
+    factory-method:指定使用哪个工厂实例的方法
+    -->
+    <bean id="person6" class="com.msb.bean.Person" factory-bean="personInstanceFactory" factory-method="getPerson">
+        <constructor-arg value="wangwu"></constructor-arg>
+    </bean>
+
+
+    <bean id="myFactoryBean" class="com.msb.factory.MyFactoryBean"></bean>
+
+    <!--
+     bean 生命周期表示bean的创建到销毁
+     如果bean是单例，容器在启动时候回创建好，关闭的时候销毁bean
+     如果bean 是多例，获取对象的时候创建对象，销毁的时候不会有任何的调用
+
+    -->
+
+    <bean id="address" class="com.msb.bean.complex.Address" init-method="init" destroy-method="destory"></bean>
+
+   <bean id="myBeanPostProcessor" class="com.msb.bean.MyBeanPostProcessor"></bean>
+</beans>

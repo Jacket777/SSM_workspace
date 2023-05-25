@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       ">
+    <context:component-scan base-package="com.msb"></context:component-scan>
+    <!--开启AOP的注解功能-->
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+    <!--基于配置的AOP配置-->
+    <bean id="logUtil3" class="com.msb.util.LogUtil3"></bean>
+    <bean id="securityAspect2" class="com.msb.util.SecurityAspect2"></bean>
+    <bean id="MyCalculator3" class="com.msb.inter.MyCalculator3"></bean>
+    <aop:config>
+        <aop:pointcut id="globalPoint" expression="execution(public int com.msb.inter.MyCalculator3.*(int,int))"></aop:pointcut>
+        <aop:aspect ref="logUtil3">
+            <aop:pointcut id="mypoint" expression="execution(public int com.msb.inter.MyCalculator3.*(int,int))"></aop:pointcut>
+            <aop:before method="start" pointcut-ref="mypoint"></aop:before>
+            <aop:after method="end" pointcut-ref="mypoint"></aop:after>
+            <aop:after-returning method="stop" pointcut-ref="mypoint" returning="result"></aop:after-returning>
+            <aop:after-throwing method="logException" pointcut-ref="mypoint" throwing="exception"></aop:after-throwing>
+            <aop:around method="myAround" pointcut-ref="mypoint"></aop:around>
+        </aop:aspect>
+        <aop:aspect ref="securityAspect2">
+            <aop:before method="start" pointcut-ref="globalPoint"></aop:before>
+            <aop:after method="end" pointcut-ref="globalPoint"></aop:after>
+            <aop:after-returning method="stop" pointcut-ref="globalPoint" returning="result"></aop:after-returning>
+            <aop:after-throwing method="logException" pointcut-ref="globalPoint" throwing="exception"></aop:after-throwing>
+            <aop:around method="myAround" pointcut-ref="mypoint"></aop:around>
+        </aop:aspect>
+    </aop:config>
+</beans>

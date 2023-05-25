@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util.xsd
+     ">
+
+
+ <!--
+    复杂类型的赋值-相应的类在com.msb.bean.complex.包中
+ <bean id="person" class="com.msb.bean.Person">
+ </bean>
+ -->
+
+<!--给复杂类型的赋值都是在property标签内进行-->
+    <bean id="person" class="com.msb.bean.complex.Person">
+        <property name="name">
+            <!--赋空值-->
+            <null></null>
+        </property>
+        <!--通过ref引用其他对象，引用外部bean-->
+        <!--
+        <property name="address" ref="address"></property>
+        -->
+        <property name="address">
+            <bean class="com.msb.bean.complex.Address">
+                <property name="province" value="北京"></property>
+                <property name="city" value="北京"></property>
+                <property name="town" value="西城区"></property>
+            </bean>
+        </property>
+
+
+        <!--为list赋值-->
+        <property name="books">
+            <list>
+                <!--内部bean-->
+                <bean id = "book1" class="com.msb.bean.complex.Book">
+                    <property name="name" value="多线程"></property>
+                    <property name="author" value="Jack"></property>
+                    <property name="price" value="1000"></property>
+                </bean>
+                <!--外部bean-->
+                <ref bean="book2"></ref>
+            </list>
+        </property>
+
+        <!--为map赋值-->
+        <property name="maps" ref="myMap"></property>
+        <!--为property赋值-->
+        <property name="properties">
+            <props>
+                <prop key="aaa">1111</prop>
+                <prop key="bbb">2222</prop>
+            </props>
+        </property>
+
+        <!--为数组赋值-->
+        <property name="hobbies">
+            <array>
+                <value>book</value>
+                <value>movie</value>
+                <value>game</value>
+            </array>
+        </property>
+
+        <!--为set赋值-->
+        <property name="sets">
+            <set>
+                <value>111</value>
+                <value>222</value>
+                <value>333</value>
+            </set>
+        </property>
+
+
+    </bean>
+
+  <bean id="address" class="com.msb.bean.complex.Address">
+      <property name="province" value="河北"></property>
+      <property name="city" value="邯郸"></property>
+      <property name="town" value="武安"></property>
+  </bean>
+
+    <!--bean对象在创建的时候是按照bean在配置文件的顺序决定的，也可以使用depend-on标签来决定顺序-->
+    <bean id="book2" class="com.msb.bean.complex.Book" depends-on="person,address">
+        <property name="name" value="JVM"></property>
+        <property name="author" value="Jack"></property>
+        <property name="price" value="1200"></property>
+    </bean>
+
+
+    <!--级联属性-->
+    <bean id="person2" class="com.msb.bean.complex.Person">
+        <property name="address" ref="address"></property>
+        <property name="address.province" value="Beijing"></property>
+    </bean>
+
+
+    <!--util名称空间创建集合类型的bean-->
+    <util:map id="myMap">
+        <entry key="key1" value="value1"></entry>
+        <entry key="key2" value-ref="book2"></entry>
+        <entry key="key3">
+            <bean class="com.msb.bean.complex.Book">
+                <property name="name" value="西游记"></property>
+                <property name="author" value="吴承恩"></property>
+                <property name="price" value="100"></property>
+            </bean>
+        </entry>
+
+    </util:map>
+
+
+</beans>

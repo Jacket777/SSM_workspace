@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace 表示命名空间-->
+<mapper namespace="com.itheima.mapper.CustomerMapper">
+    <!--定义表的前缀名-->
+    <sql id="tablename">
+        ${prefix}customer
+    </sql>
+    <!--定义要查询的表-->
+    <sql id="someinclude">
+        from
+        <include refid="${include_target}"/>
+    </sql>
+    <!--定义查询列-->
+    <sql id="customerColumns">
+     id,username,jobs,phone
+    </sql>
+
+
+
+    <!--根据客户编号获取客户信息-->
+    <select id="findCustomerById" parameterType="Integer"
+            resultType="com.itheima.po.Customer">
+        select
+         <include refid="customerColumns"/>
+         <include refid="someinclude">
+             <property name="prefix" value="t_"></property>
+             <property name="include_target" value="tablename"></property>
+         </include>
+         where id = #{id}
+    </select>
+
+    <!--根据客户名模糊查询客户信息列表-->
+    <select id="findCustomerByName" parameterType="String"
+            resultType="com.itheima.po.Customer">
+        <!--防止注入 写法-->
+
+        select * from t_customer where username like concat('%',#{value}),'%')
+    </select>
+
+
+    <!--添加客户-->
+    <insert id="addCustomer" parameterType="com.itheima.po.Customer"
+       keyProperty="id" useGeneratedKeys="true">
+        insert into t_customer(username,jobs,phone)values(#{username},#{jobs},#{phone})
+    </insert>
+
+    <!--更新客户-->
+    <update id="updateCustomer" parameterType="com.itheima.po.Customer"
+            flushCache="true" statementType="PREPARED"
+            timeout="20"
+    >
+        update t_customer set username=#{username},jobs=#{jobs},phone=#{phone}
+        where id=#{id}
+    </update>
+
+
+    <!--删除客户-->
+    <delete id="deleteCustomer" parameterType="Integer">
+        delete from t_customer where id = #{id}
+    </delete>
+
+
+    <!--resultMap使用-->
+    <resultMap id="resultMap" type="com.itheima.po.User">
+        <id property="id" column="t_id"/>
+        <result property="name" column="t_name"/>
+        <result property="age" column="t_age"/>
+    </resultMap>
+    <select id="findAllUser" resultMap="resultMap">
+        select * from t_user;
+    </select>
+
+
+
+
+
+    <!--动态SQL-->
+    <!--<if>元素使用-->
+    <select id="findCustomerByNameAndJobs"
+            parameterType="com.itheima.po.Customer"
+            resultType="com.itheima.po.Customer">
+        select * from t_customer where 1 =1
+        <if test="username!=null and username!=''">
+            and username like concat('%',#{username},'%')
+        </if>
+        <if test="jobs!=null and jobs!=''">
+            and jobs=#{jobs}
+        </if>
+    </select>
+
+
+
+    <!---chosse when otherwise元素使用-->
+    <select id="findCustomerByNameOrJobs"
+        parameterType ="com.itheima.po.Customer"
+        resultType="com.itheima.po.Customer"
+    >
+   select * from t_customer where 1 =1
+   <choose>
+       <when test="username!=null and username!=''">
+           and username like concat('%',#{username},'%')
+       </when>
+       <when test="jobs!=null and jobs!=''">
+           and jobs=#{jobs}
+       </when>
+       <otherwise>
+           and phone is not null
+       </otherwise>
+   </choose>
+    </select>
+
+    <!--<where>元素-->
+    <select id="findCustomerByWhere"
+    parameterType="com.itheima.po.Customer"
+    resultType="com.itheima.po.Customer">
+        select * from t_customer
+    <where>
+        <if test="username!=null and username!=''">
+            and username like concat('%',#{username},'%')
+        </if>
+        <if test="jobs!=null and jobs!=''">
+            and jobs=#{jobs}
+        </if>
+    </where>
+    </select>
+
+
+
+    <!--trim元素-->
+    <select id="findCustomerByTrim"
+           parameterType="com.itheima.po.Customer"
+           resultType="com.itheima.po.Customer">
+     select * from t_customer
+     <trim prefix="where" prefixOverrides="and">
+             <if test="username!=null and username!=''">
+                     and username like concat('%',#{username},'%')
+             </if>
+             <if test="jobs!=null and jobs!=''">
+                and jobs = #{jobs}
+             </if>
+     </trim>
+    </select>
+
+
+    <!--set元素-->
+    <update id="updateCustomerBySet"
+            parameterType="com.itheima.po.Customer">
+        update t_customer
+        <set>
+            <if test="username!=null and username!=''">
+                username=#{username},
+            </if>
+            <if test="jobs!=null and jobs!=''">
+                jobs = #{jobs},
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone=#{phone},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+
+
+    <!--foreach 元素使用-->
+    <select id="findCustomerByIds" parameterType="List"
+            resultType="com.itheima.po.Customer"
+            >
+        select * from t_customer where id in
+        <foreach item="id" index="index" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
+
+    <!--bind 元素使用-->
+    <select id="findCustomerByNameBind" parameterType="com.itheima.po.Customer"
+        resultType="com.itheima.po.Customer">
+        <!--_parameter.getUsername()也可以直接写成传入的字段属性名,就是username-->
+   <bind name="pattern_username" value="'%'+_parameter.getUsername()+'%'"/>
+        select * from t_customer
+        where username like #{pattern_username}
+    </select>
+
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+   <context:component-scan base-package="com.msb">
+      <!--
+        当定义好基础扫描的包之后，可以排除包中的某些类，使用如下的方式:
+        type:表示指定过滤的规则
+            annotation：按照注解进行排除，标注了指定注解的组件不要,expression表示要过滤的注解
+            assignable：指定排除某个具体的类，按照类排除，expression表示不注册的具体类名
+            aspectj：后面讲aop的时候说明要使用的aspectj表达式，不用
+            custom：定义一个typeFilter,自己写代码决定哪些类被过滤掉，不用
+            regex：使用正则表达式过滤，不用
+        -->
+
+   <!--当定义好注解扫描路径之后，可以做更细粒度的控制，
+      type:
+      assignable注解：按照对应的类，表达式必须完全是完全限定名
+      annotation:按照注解排除
+      regex:
+      aspect:使用切面的方式 一般不用
+      custom:使用自定义方式，可以自定义自己刷选
+      -->
+<!--      <context:exclude-filter type="assignable" expression="com.msb.controller.PersonController"></context:exclude-filter>-->
+  <!-- <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"></context:exclude-filter>-->
+    <context:include-filter type="assignable" expression="com.msb.controller.PersonController"></context:include-filter>
+   </context:component-scan>
+
+<!--
+   <bean id="personController" class="com.msb.controller.PersonController" autowire="byName"></bean>
+-->
+
+</beans>

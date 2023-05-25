@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+     ">
+
+
+    <!--
+       继承关系bean配置
+    -->
+
+    <bean id="person" class="com.msb.bean.Person">
+        <property name="id" value="1"></property>
+        <property name="name" value="zhangsan"></property>
+        <property name="age" value="21"></property>
+        <property name="gender" value="男"></property>
+    </bean>
+    <!--parent:指定bean的配置信息继承于哪个bean-->
+    <bean id="person2" class="com.msb.bean.Person" parent="person">
+        <property name="name" value="lisi"></property>
+    </bean>
+
+
+    <!--如果想实现Java文件的抽象类，不需要将当前bean实例化的话，可以使用abstract属性
+    将其设置为true，此时打印对象，则报错
+
+
+    -->
+    <!--parent:指定bean的配置信息继承于哪个bean-->
+    <bean id="person3" class="com.msb.bean.Person" abstract="true">
+        <property name="id" value="1"></property>
+        <property name="name" value="zhangsan2"></property>
+        <property name="age" value="21"></property>
+        <property name="gender" value="男"></property>
+    </bean>
+
+    <!--parent:指定bean的配置信息继承于哪个bean-->
+    <bean id="person4" class="com.msb.bean.Person" parent="person">
+        <property name="name" value="lisi2"></property>
+    </bean>
+
+
+</beans>

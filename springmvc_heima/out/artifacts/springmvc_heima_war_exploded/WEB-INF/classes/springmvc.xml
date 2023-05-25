@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       ">
+
+    <context:component-scan base-package="com.itheima"></context:component-scan>
+    <!--视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+
+        <property name="prefix" value="/WEB-INF/page/"></property>
+        <property name="suffix" value=".jsp"></property>
+
+    </bean>
+
+
+    <!--配置处理器Handle，映射"/firstController"请求-->
+    <bean id="/firstController" class="com.itheima.controller.FirstController"></bean>
+
+
+    <!--处理器映射器，将处理器Handle的name作为url进行查找-->
+<!--
+    <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"></bean>
+-->
+    <!--处理器适配器，配置对处理器中handleRequest()方法调用-->
+<!--
+    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"></bean>
+   -->
+
+    <!--显示的装配自定义类型转换器-->
+    <mvc:annotation-driven conversion-service="conversionService"></mvc:annotation-driven>
+    <!--自定义类型转换器配置-->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.itheima.convert.DateConverter"></bean>
+            </set>
+        </property>
+    </bean>
+
+
+
+
+
+</beans>

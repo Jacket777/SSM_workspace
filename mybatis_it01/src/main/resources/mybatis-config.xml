@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <properties resource="db.properties"></properties>
+    <!--主要用于改变mybatis运行时的行为-->
+    <settings>
+        <!--打开延迟加载的开关-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!--将积极加载改为消极加载，就是按需加载-->
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+
+
+    <typeAliases>
+        <!--定义别名-->
+        <typeAlias alias="user" type="com.itheima.po.User"/>
+        <!--使用扫描包的形式定义别名-->
+      <package name="com.itheima.po"/>
+    </typeAliases>
+
+    <!--1.配置环境，默认的环境id为mysql-->
+    <environments default="mysql">
+        <!--1.1.配置id为mysql的数据库环境-->
+        <environment id="mysql">
+            <!--1.1.1.使用JDBC的事务管理-->
+            <transactionManager type="JDBC"/>
+            <!--1.1.2.数据库连接池-->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--2.配置Mapper的位置-->
+    <mappers>
+        <mapper resource="com/itheima/mapper/CustomerMapper.xml"/>
+        <mapper resource="com/itheima/mapper/UserMapper.xml"/>
+        <mapper resource="com/itheima/mapper/PersonMapper.xml"/>
+        <mapper resource="com/itheima/mapper/IdCardMapper.xml"/>
+        <mapper resource="com/itheima/mapper/UsersMapper.xml"/>
+        <mapper resource="com/itheima/mapper/OrdersMapper.xml"/>
+        <mapper resource="com/itheima/mapper/ProductMapper.xml"/>
+    </mappers>
+</configuration>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+   <bean id="person" class="com.msb.bean.Person" abstract="true">
+      <property name="id" value="1"/>
+      <property name="name" value="Jack"/>
+      <property name="age" value="21"/>
+      <property name="gender" value="男"/>
+    </bean>
+    <bean id="person2" class="com.msb.bean.Person" parent="person">
+        <property name="name" value="tom"/>
+    </bean>
+</beans>

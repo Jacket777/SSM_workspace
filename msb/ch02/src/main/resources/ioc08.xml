@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+  <!--init-method :对象初始化方法名， destroy-method:销毁对象方法名  -->
+  <bean id="address" class="com.msb.bean.Address" />
+  <bean id="beanPostProcessor" class="com.msb.bean.MyBeanPostProcessor"/>
+</beans>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--实例工厂使用-->
+    <!--1.创建实例工厂对象-->
+    <bean id="factory" class="com.msb.factory.PersonInstanceFactory"/>
+    <!--2.实例工厂创建-->
+    <bean id="person" class="com.msb.bean.Person" factory-bean="factory" factory-method="getPerson">
+        <constructor-arg value="tom"></constructor-arg>
+    </bean>
+</beans>

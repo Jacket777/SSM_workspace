@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util.xsd">
+    <!--给复杂类型的赋值都在property标签内进行-->
+    <bean id ="person" class="com.msb.bean.Person">
+        <property name="name">
+            <!--赋空值-->
+            <null/>
+        </property>
+        <property name="address">
+            <bean class="com.msb.bean.Address">
+                <property name="province" value="江苏"/>
+                <property name="city" value="南通"/>
+                <property name="town" value="通州"/>
+            </bean>
+        </property>
+        <property name="books">
+            <list>
+                <!--内部bean-->
+                <bean id="book1" class="com.msb.bean.Book">
+                    <property name="name" value="spring实战"/>
+                    <property name="author" value="jack"/>
+                    <property name="price" value="100"/>
+                </bean>
+                <!--外部bean-->
+                <ref bean="book2"/>
+            </list>
+        </property>
+        <!--map赋值-->
+        <property name="maps" ref="myMap"/>
+        <!--property赋值-->
+        <property name="properties">
+            <props>
+                <prop key="a">A</prop>
+                <prop key="b">B</prop>
+            </props>
+        </property>
+        <!--数组赋值-->
+        <property name="hobbies">
+            <array>
+                <value>book</value>
+                <value>movie</value>
+                <value>game</value>
+            </array>
+        </property>
+        <!--set赋值-->
+        <property name="sets">
+            <set>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="address" class="com.msb.bean.Address">
+        <property name="province" value="江苏"/>
+        <property name="city" value="南京"/>
+        <property name="town" value="江宁"/>
+    </bean>
+    <bean id="book2" class="com.msb.bean.Book">
+        <property name="name" value="mybatis实战"/>
+        <property name="author" value="tom"/>
+        <property name="price" value="200"/>
+    </bean>
+      <!--util名称空间创建集合类型的bean-->
+    <util:map id="myMap">
+        <entry key="key1" value="value1"/>
+        <entry key="key2" value-ref="book2"/>
+        <entry key="key3">
+            <bean class="com.msb.bean.Book">
+                <property name="name" value="西游记"/>
+                <property name="author" value="吴承恩"/>
+                <property name="price" value="100"/>
+            </bean>
+        </entry>
+    </util:map>
+</beans>

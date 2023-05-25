@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace 表示命名空间-->
+<mapper namespace="com.msb.mapper.EmpMapper">
+    <!--根据客户名模糊查询客户信息列表-->
+    <select id="findEmpById" parameterType="Integer"
+            resultType="com.msb.po.Emp">
+        <!--防止注入 写法-->
+
+        select * from Emp where id=#{id}
+    </select>
+</mapper>

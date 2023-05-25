@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace 表示命名空间-->
+<mapper namespace="com.itheima.mapper.UsersMapper">
+
+    <!--一对多:查看某一用户及其关联的订单信息
+    注意：当关联查询出的列名相同，需要用别名区分
+    -->
+
+    <select id="findUserWithOrders" parameterType="Integer"
+            resultMap="UserWithOrderResult">
+        SELECT u.*, o.id as orders_id,o.number
+        from tb_user u, tb_orders o
+        where u.id = o.user_id
+        and u.id = #{id}
+    </select>
+    <resultMap id="UserWithOrderResult" type="com.itheima.po.Users">
+      <id property="id" column="id"/>
+      <result property="username" column="username"/>
+      <result property="address" column="address"/>
+      <!--
+          一对多关联映射:collection
+          ofType表示属性集合中元素的类型，List<Orders>属于Orders类
+      -->
+      <collection property="ordersList" ofType="com.itheima.po.Orders">
+          <id property="id" column="orders_id"/>
+          <result property="number" column="number"/>
+      </collection>
+  </resultMap>
+
+
+
+    <!--一对多:查看某一用户及其关联的订单信息
+      注意：嵌套查询
+      -->
+    <select id="findUserWithOrders2" parameterType="Integer"
+            resultMap="UserWithOrderResult2">
+       SELECT * from tb_user where id = #{id}
+    </select>
+    <resultMap id="UserWithOrderResult2" type="com.itheima.po.Users">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="address" column="address"/>
+        <!--
+            一对多关联映射:嵌套查询
+            ofType表示属性集合中元素的类型，List<Orders>属于Orders类
+        -->
+        <collection property="ordersList"
+                    column="id"
+                    ofType="com.itheima.po.Orders"
+                    select="com.itheima.mapper.OrdersMapper.selectOrders"/>
+    </resultMap>
+
+
+</mapper>

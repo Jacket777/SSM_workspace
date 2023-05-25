@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd">
+    <!--1.读取db.properties-->
+    <context:property-placeholder location="classpath:db.properties"/>
+
+    <!--2.配置数据源-->
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <!--1.1.数据库驱动-->
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <!--1.2.数据库的url-->
+        <property name="url" value="${jdbc.url}"/>
+        <!--1.3.连接数据库的用户名-->
+        <property name="username" value="${jdbc.username}"/>
+        <!--1.4.连接数据库的密码-->
+        <property name="password" value="${jdbc.password}"/>
+        <!--1.5.最大连接数-->
+        <property name="maxTotal" value="${jdbc.maxTotal}"/>
+        <!--1.6.最大空闲连接-->
+        <property name="maxIdle" value="${jdbc.maxIdle}"/>
+        <!--1.7.初始化连接数-->
+        <property name="initialSize" value="${jdbc.initialSize}"/>
+    </bean>
+
+
+    <!--3.事务管理器，依赖于数据源-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--4.开启事务注解-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!--5.配置MyBatis工厂-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--注入数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--指定核心配置文件位置-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+    </bean>
+
+
+    <!--6.实例化Dao-->
+    <bean id="customerDao" class="com.itheima.dao.impl.CustomerDaoImpl">
+        <!--注入SqlSessionFactory对象实例-->
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+
+
+    <!--7.Mapper代理开发-->
+    <bean id="customerMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.itheima.mapper.CustomerMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+
+
+    <!--8.Mapper代理开发(基于MapperScannerConfigurer)-->
+    <!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+        <!--<property name="basePackage" value="com.itheima.mapper"/>-->
+
+    <!--</bean>-->
+
+
+    <context:component-scan base-package="com.itheima.service"/>
+    <!--<bean id="CustomerService" class="com.itheima.service.impl.CustomerServiceImpl">-->
+    <!--</bean>-->
+
+</beans>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+    <!--将指定类配置给Spring，让Spring创建其对象的实例-->
+
+    <bean id="userDao" class="com.itheima.ioc.UserDaoImpl"/>
+    <!--添加一个将id为userService的实例-->
+    <bean id="userService" class="com.itheima.ioc.UserServiceImpl">
+        <!--将id为userDao的Bean实例注入到UserService实例中-->
+        <property name="userDao" ref="userDao"/>
+    </bean>
+
+    <bean id="bean1" class="com.itheima.instance.constructor.Bean1"/>
+
+
+    <bean id="bean2"
+          class="com.itheima.instance.static_factory.MyBean2Factory"
+          factory-method="createBean"/>
+
+    <!--配置工厂-->
+    <bean id="myBean3Factory"
+          class="com.itheima.instance.factory.MyBean3Factory"/>
+
+    <!--使用factory-bean属性指向的配置的实例工厂
+        使用factory-method属性确定使用工厂中的哪个方法-->
+    <bean id="bean3"
+          factory-bean="myBean3Factory"
+          factory-method="createBean"/>
+
+
+    <bean id="scope" class="com.itheima.scope.Scope" scope="singleton"/>
+
+    <bean id="scope2" class="com.itheima.scope.Scope" scope="prototype"/>
+
+
+    <!--1.使用构造注入方式装配User实例，就是调用构造方法-->
+    <bean id="user1" class="com.itheima.assemble.User">
+        <constructor-arg index="0" value="tom"/>
+        <constructor-arg index="1" value="123456"/>
+        <constructor-arg index="2">
+            <list>
+                <value>"constructorvalue"</value>
+                <value>"constructorvalue2"</value>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!--2.使用设置注入方式装配User实例，就是setter方法-->
+    <bean id="user2" class="com.itheima.assemble.User">
+        <property name="username" value="jack"/>
+        <property name="password" value="654321"/>
+        <!--注入list集合-->
+        <property name="list">
+            <list>
+                <value>"setlistvalue1"</value>
+                <value>"setlistvalue2</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <!--使用context命名空间，在配置文件中开启相应的注解处理器-->
+    <context:component-scan base-package="com.itheima.annotation"/>
+
+
+</beans>
